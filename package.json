@@ -8,6 +8,7 @@
     "type": "git",
     "url": "https://github.com/suzuki-shm/rest-formatter"
   },
+  "publisher": "ShinyaSuzuki",
   "engines": {
     "vscode": "^1.101.0"
   },
