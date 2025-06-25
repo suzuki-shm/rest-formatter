@@ -21,12 +21,7 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "rest-formatter.helloWorld",
-        "title": "Hello World"
-      }
-    ],
+    "commands": [],
     "languages": [
       {
         "id": "rest",
