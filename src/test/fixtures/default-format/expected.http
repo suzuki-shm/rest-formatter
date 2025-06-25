@@ -1,0 +1,9 @@
+POST https://example.com/api/users
+Content-Type: application/json
+X-Custom-Header: value
+
+{
+  "name": "John Doe",
+  "age": 30,
+  "email": "john.doe@example.com"
+}

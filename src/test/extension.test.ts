@@ -1,15 +1,87 @@
 import * as assert from 'assert';
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
+import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
 
-suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
+import * as sinon from 'sinon';
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-	});
+// Helper function to run a format test
+async function runFormatTest(inputContent: string, expectedContent: string) {
+    const document = await vscode.workspace.openTextDocument({ content: inputContent, language: 'rest' });
+    await vscode.window.showTextDocument(document);
+    await vscode.commands.executeCommand('editor.action.formatDocument');
+    const formattedText = document.getText();
+    assert.strictEqual(formattedText, expectedContent);
+}
+
+// Helper to read fixture files
+function readFixture(caseName: string, fileName: 'input.http' | 'expected.http'): string {
+    const fixturesDir = path.resolve(__dirname, './fixtures');
+    const filePath = path.join(fixturesDir, caseName, fileName);
+    return fs.readFileSync(filePath, 'utf-8');
+}
+
+suite('REST Formatter Test Suite', () => {
+
+  suiteSetup(async () => {
+    // Open and close a dummy file to ensure the extension is activated
+    const doc = await vscode.workspace.openTextDocument({ content: '', language: 'rest' });
+    await vscode.window.showTextDocument(doc);
+    await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+  });
+
+  // Reset config before each test
+  setup(async () => {
+    const config = vscode.workspace.getConfiguration('rest-formatter');
+    await config.update('header.indent', 0, vscode.ConfigurationTarget.Global);
+    await config.update('body.json.indent', 0, vscode.ConfigurationTarget.Global);
+
+    // Set editor settings for consistent tests
+    const editorConfig = vscode.workspace.getConfiguration('editor');
+    await editorConfig.update('tabSize', 2, vscode.ConfigurationTarget.Global);
+    await editorConfig.update('insertSpaces', true, vscode.ConfigurationTarget.Global);
+  });
+
+  test('Default format', async () => {
+    const input = readFixture('default-format', 'input.http');
+    const expected = readFixture('default-format', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('Multiple requests', async () => {
+    const input = readFixture('multiple-requests', 'input.http');
+    const expected = readFixture('multiple-requests', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('Header indent', async () => {
+    const config = vscode.workspace.getConfiguration('rest-formatter');
+    await config.update('header.indent', 4, vscode.ConfigurationTarget.Global);
+    const input = readFixture('header-indent', 'input.http');
+    const expected = readFixture('header-indent', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('Body indent', async () => {
+    const config = vscode.workspace.getConfiguration('rest-formatter');
+    await config.update('body.json.indent', 2, vscode.ConfigurationTarget.Global);
+    const input = readFixture('body-indent', 'input.http');
+    const expected = readFixture('body-indent', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('No JSON body', async () => {
+    const input = readFixture('no-json-body', 'input.http');
+    const expected = readFixture('no-json-body', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('Invalid JSON', async () => {
+    const showInformationMessage = sinon.spy(vscode.window, 'showInformationMessage');
+    const input = readFixture('invalid-json', 'input.http');
+    const expected = readFixture('invalid-json', 'expected.http');
+    await runFormatTest(input, expected);
+    assert.ok(showInformationMessage.calledWith('Failed to format JSON body. Please check for syntax errors.'));
+    showInformationMessage.restore();
+  });
 });

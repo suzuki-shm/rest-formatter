@@ -1,0 +1,6 @@
+POST https://example.com/api/users
+Content-Type: application/json
+
+{"name":"John Doe"}
+###
+GET https://example.com/api/users
