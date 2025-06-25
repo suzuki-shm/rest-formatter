@@ -38,8 +38,7 @@ You can configure these settings in your `settings.json` file or through the VS 
 
 ## Known Issues
 
--   There are no known issues at this time. Please report any issues you find on the [GitHub repository](https://github.com/your-repo-url).
-
+-   There are no known issues at this time. Please report any issues you find on the [GitHub repository](https://github.com/suzuki-shm/rest-formatter).
 
 
 ---
