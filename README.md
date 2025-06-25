@@ -1,71 +1,47 @@
-# rest-formatter README
+# REST Formatter
 
-This is the README for your extension "rest-formatter". After writing up a brief description, we recommend including the following sections.
+A simple and lightweight formatter for `.http` and `.rest` files in Visual Studio Code. This extension helps you keep your REST API request files clean and readable by formatting headers and JSON bodies.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Format `.http` and `.rest` files**: Automatically formats your request files when you save them or trigger the format command.
+- **Indent Headers**: Indents request headers for better readability.
+- **Format JSON Bodies**: Pretty-prints JSON bodies in your requests.
+- **Multiple Requests**: Supports formatting files with multiple requests separated by `###`.
+- **Configurable Indentation**: Customize the indentation for headers and JSON bodies through VS Code settings.
 
-For example if there is an image subfolder under your extension project workspace:
+## Usage
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+1.  Install the extension from the Visual Studio Code Marketplace.
+2.  Open a `.http` or `.rest` file.
+3.  Run the "Format Document" command (`Shift+Option+F` on macOS, `Shift+Alt+F` on Windows).
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+-   `rest-formatter.header.indent`: Number of spaces to indent headers.
+    -   **Default**: `0`
+-   `rest-formatter.body.json.indent`: Number of spaces to indent the root of the JSON body.
+    -   **Default**: `0`
+
+You can configure these settings in your `settings.json` file or through the VS Code settings UI.
+
+**Example `settings.json`:**
+
+```json
+{
+    "rest-formatter.header.indent": 4,
+    "rest-formatter.body.json.indent": 2
+}
+```
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+-   There are no known issues at this time. Please report any issues you find on the [GitHub repository](https://github.com/your-repo-url).
 
-## Release Notes
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
 
 ---
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**
