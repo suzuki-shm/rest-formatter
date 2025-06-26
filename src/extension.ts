@@ -64,7 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
     };
 
     context.subscriptions.push(
-        vscode.languages.registerDocumentFormattingEditProvider('rest', provider)
+        vscode.languages.registerDocumentFormattingEditProvider('http', provider)
     );
 }
 

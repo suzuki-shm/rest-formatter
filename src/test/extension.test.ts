@@ -7,7 +7,7 @@ import * as sinon from 'sinon';
 
 // Helper function to run a format test
 async function runFormatTest(inputContent: string, expectedContent: string) {
-    const document = await vscode.workspace.openTextDocument({ content: inputContent, language: 'rest' });
+    const document = await vscode.workspace.openTextDocument({ content: inputContent, language: 'http' });
     await vscode.window.showTextDocument(document);
     await vscode.commands.executeCommand('editor.action.formatDocument');
     const formattedText = document.getText();
@@ -25,7 +25,7 @@ suite('REST Formatter Test Suite', () => {
 
   suiteSetup(async () => {
     // Open and close a dummy file to ensure the extension is activated
-    const doc = await vscode.workspace.openTextDocument({ content: '', language: 'rest' });
+    const doc = await vscode.workspace.openTextDocument({ content: '', language: 'http' });
     await vscode.window.showTextDocument(doc);
     await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
   });

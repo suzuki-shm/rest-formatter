@@ -24,9 +24,11 @@
     "commands": [],
     "languages": [
       {
-        "id": "rest",
+        "id": "http",
         "aliases": [
-          "REST"
+          "HTTP",
+          "Http",
+          "http"
         ],
         "extensions": [
           ".http",
@@ -36,7 +38,7 @@
     ],
     "formatters": [
       {
-        "language": "rest",
+        "language": "http",
         "displayName": "REST Formatter",
         "id": "rest-formatter"
       }
