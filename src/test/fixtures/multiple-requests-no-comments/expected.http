@@ -6,5 +6,4 @@ Content-Type: application/json
 }
 
 
-###
 GET https://example.com/api/users

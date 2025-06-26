@@ -1,9 +1,10 @@
 POST https://example.com/api/users
 Content-Type: application/json
 
-{
-  "name": "John Doe"
-}
+{"name":"John Doe"}
+
+
+
 
 
 ###

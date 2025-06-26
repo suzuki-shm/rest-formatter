@@ -42,19 +42,19 @@ suite('REST Formatter Test Suite', () => {
     await editorConfig.update('insertSpaces', true, vscode.ConfigurationTarget.Global);
   });
 
-  test('Default format', async () => {
+  test('1. Default format', async () => {
     const input = readFixture('default-format', 'input.http');
     const expected = readFixture('default-format', 'expected.http');
     await runFormatTest(input, expected);
   });
 
-  test('Multiple requests', async () => {
+  test('2. Multiple requests', async () => {
     const input = readFixture('multiple-requests', 'input.http');
     const expected = readFixture('multiple-requests', 'expected.http');
     await runFormatTest(input, expected);
   });
 
-  test('Header indent', async () => {
+  test('3. Header indent', async () => {
     const config = vscode.workspace.getConfiguration('rest-formatter');
     await config.update('header.indent', 4, vscode.ConfigurationTarget.Global);
     const input = readFixture('header-indent', 'input.http');
@@ -62,7 +62,7 @@ suite('REST Formatter Test Suite', () => {
     await runFormatTest(input, expected);
   });
 
-  test('Body indent', async () => {
+  test('4. Body indent', async () => {
     const config = vscode.workspace.getConfiguration('rest-formatter');
     await config.update('body.json.indent', 2, vscode.ConfigurationTarget.Global);
     const input = readFixture('body-indent', 'input.http');
@@ -70,18 +70,36 @@ suite('REST Formatter Test Suite', () => {
     await runFormatTest(input, expected);
   });
 
-  test('No JSON body', async () => {
+  test('5. No JSON body', async () => {
     const input = readFixture('no-json-body', 'input.http');
     const expected = readFixture('no-json-body', 'expected.http');
     await runFormatTest(input, expected);
   });
 
-  test('Invalid JSON', async () => {
+  test('6. Invalid JSON', async () => {
     const showInformationMessage = sinon.spy(vscode.window, 'showInformationMessage');
     const input = readFixture('invalid-json', 'input.http');
     const expected = readFixture('invalid-json', 'expected.http');
     await runFormatTest(input, expected);
     assert.ok(showInformationMessage.calledWith('Failed to format JSON body. Please check for syntax errors.'));
     showInformationMessage.restore();
+  });
+
+  test('7. Multiple requests with comments', async () => {
+    const input = readFixture('multiple-requests-with-comments', 'input.http');
+    const expected = readFixture('multiple-requests-with-comments', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('8. Multiple requests with no comments', async () => {
+    const input = readFixture('multiple-requests-no-comments', 'input.http');
+    const expected = readFixture('multiple-requests-no-comments', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('9. Multiple requests with many blanks', async () => {
+    const input = readFixture('multiple-requests-many-blanks', 'input.http');
+    const expected = readFixture('multiple-requests-many-blanks', 'expected.http');
+    await runFormatTest(input, expected);
   });
 });
