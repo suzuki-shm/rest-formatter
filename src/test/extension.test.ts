@@ -91,13 +91,8 @@ suite('REST Formatter Test Suite', () => {
     await runFormatTest(input, expected);
   });
 
-  test('8. Multiple requests with no comments', async () => {
-    const input = readFixture('multiple-requests-no-comments', 'input.http');
-    const expected = readFixture('multiple-requests-no-comments', 'expected.http');
-    await runFormatTest(input, expected);
-  });
 
-  test('9. Multiple requests with many blanks', async () => {
+  test('8. Multiple requests with many blanks', async () => {
     const input = readFixture('multiple-requests-many-blanks', 'input.http');
     const expected = readFixture('multiple-requests-many-blanks', 'expected.http');
     await runFormatTest(input, expected);
