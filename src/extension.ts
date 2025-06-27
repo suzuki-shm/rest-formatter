@@ -1,10 +1,11 @@
-import * as vscode from 'vscode';
 import LosslessJSON from 'lossless-json';
+import * as vscode from 'vscode';
 
 function formatRequest(request: string, options: vscode.FormattingOptions): string {
     const config = vscode.workspace.getConfiguration('rest-formatter');
     const headerIndent = ' '.repeat(config.get<number>('header.indent', 0));
     const bodyIndent = ' '.repeat(config.get<number>('body.json.indent', 0));
+    
 
     const trimmedRequest = request.trim();
     if (!trimmedRequest) { return ''; }
@@ -29,9 +30,10 @@ function formatRequest(request: string, options: vscode.FormattingOptions): stri
     if (isJson && body) {
         try {
             const json = LosslessJSON.parse(body);
-            const tabSize = typeof options.tabSize === 'number' ? options.tabSize : parseInt(options.tabSize, 10) || 2;
-            const jsonString = LosslessJSON.stringify(json, null, tabSize) as string;
-            formattedBody = jsonString.split('\n').map(l => bodyIndent + l).join('\n');
+            const formatterBodyIndent = config.get<number>('body.json.indent', 0);
+            const finalTabSize = formatterBodyIndent === 0 ? 2 : formatterBodyIndent;
+            const jsonString = LosslessJSON.stringify(json, null, finalTabSize) as string;
+            formattedBody = jsonString.split('\n').map(l => ' '.repeat(formatterBodyIndent) + l).join('\n');
         } catch (e) {
             vscode.window.showInformationMessage('Failed to format JSON body. Please check for syntax errors.');
         }
