@@ -15,7 +15,7 @@ async function runFormatTest(inputContent: string, expectedContent: string) {
 }
 
 // Helper to read fixture files
-function readFixture(caseName: string, fileName: 'input.http' | 'expected.http'): string {
+function readFixture(caseName: string, fileName: 'input.http' | 'expected.http' | 'input.rest' | 'expected.rest'): string {
     const fixturesDir = path.resolve(__dirname, './fixtures');
     const filePath = path.join(fixturesDir, caseName, fileName);
     return fs.readFileSync(filePath, 'utf-8');
@@ -95,6 +95,18 @@ suite('REST Formatter Test Suite', () => {
   test('8. Multiple requests with many blanks', async () => {
     const input = readFixture('multiple-requests-many-blanks', 'input.http');
     const expected = readFixture('multiple-requests-many-blanks', 'expected.http');
+    await runFormatTest(input, expected);
+  });
+
+  test('9. Multiple realistic requests', async () => {
+    const input = readFixture('multiple-requests-realcase', 'input.rest');
+    const expected = readFixture('multiple-requests-realcase', 'expected.rest');
+    await runFormatTest(input, expected);
+  });
+
+  test('10. With traling zero', async () => {
+    const input = readFixture('body-with-trailing-zero', 'input.http');
+    const expected = readFixture('body-with-trailing-zero', 'expected.http');
     await runFormatTest(input, expected);
   });
 });
