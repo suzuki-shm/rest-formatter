@@ -80,5 +80,8 @@
     "eslint": "^9.25.1",
     "sinon": "^21.0.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "lossless-json": "^4.1.1"
   }
 }

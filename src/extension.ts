@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import LosslessJSON from 'lossless-json';
 
 function formatRequest(request: string, options: vscode.FormattingOptions): string {
     const config = vscode.workspace.getConfiguration('rest-formatter');
@@ -27,9 +28,9 @@ function formatRequest(request: string, options: vscode.FormattingOptions): stri
     let formattedBody = body;
     if (isJson && body) {
         try {
-            const json = JSON.parse(body);
+            const json = LosslessJSON.parse(body);
             const tabSize = typeof options.tabSize === 'number' ? options.tabSize : parseInt(options.tabSize, 10) || 2;
-            const jsonString = JSON.stringify(json, null, tabSize);
+            const jsonString = LosslessJSON.stringify(json, null, tabSize) as string;
             formattedBody = jsonString.split('\n').map(l => bodyIndent + l).join('\n');
         } catch (e) {
             vscode.window.showInformationMessage('Failed to format JSON body. Please check for syntax errors.');
@@ -51,12 +52,34 @@ export function activate(context: vscode.ExtensionContext) {
             token: vscode.CancellationToken
         ): vscode.ProviderResult<vscode.TextEdit[]> {
             const text = document.getText();
-            const requests = text.split(/^###\s*$/m);
+            const requests = text.split(/(?=^###)/m);
 
-            const formattedText = requests
-                .map(req => formatRequest(req, options))
-                .filter(Boolean)
-                .join('\n\n###\n');
+            const formattedRequests = requests
+                .map(req => {
+                    if (req.trim() === '') {
+                        return '';
+                    }
+
+                    const lines = req.split(/\r?\n/);
+                    const firstLine = lines[0];
+
+                    if (firstLine.startsWith('###')) {
+                        const comment = firstLine;
+                        const restOfRequest = lines.slice(1).join('\n');
+                        const formattedRest = formatRequest(restOfRequest, options);
+
+                        if (formattedRest) {
+                            return comment + '\n' + formattedRest;
+                        } else {
+                            return comment;
+                        }
+                    } else {
+                        return formatRequest(req, options);
+                    }
+                })
+                .filter(Boolean);
+
+            const formattedText = formattedRequests.join('\n\n\n');
 
             const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
             return [vscode.TextEdit.replace(fullRange, formattedText)];
