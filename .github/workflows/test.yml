@@ -22,9 +22,7 @@ jobs:
       run: npm ci
 
     - name: Install Linux dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get update && sudo apt-get install -y libx11-xcb1 libasound2 libnss3 libxss1 libxrandr2 libgtk-3-0 libxshmfence1 libgbm1 xvfb
+      run: sudo apt-get update && sudo apt-get install -y libx11-xcb1 libnss3 libxss1 libxrandr2 libgtk-3-0 libxshmfence1 libgbm1 xvfb
 
     - name: Run tests
       run: |
