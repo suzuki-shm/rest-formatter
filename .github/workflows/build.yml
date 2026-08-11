@@ -38,17 +38,14 @@ jobs:
       - name: Run security audit
         run: npm run security:audit
 
-      - name: Compile
-        run: npm run compile
-
       - name: Package VSIX
-        run: npx --no-install @vscode/vsce package --out ./rest-formatter.vsix
+        run: npm run package:vsix
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: rest-formatter-vsix
-          path: ./rest-formatter.vsix
+          path: ./rest-formatter-*.vsix
           if-no-files-found: error
 
   release:
@@ -64,27 +61,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Use Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: '22.x'
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
       - name: Download VSIX artifact
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: rest-formatter-vsix
 
-      - name: Publish to Visual Studio Marketplace
-        run: npx --no-install @vscode/vsce publish --packagePath ./rest-formatter.vsix --skip-duplicate
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-
       - name: Create GitHub release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
-          files: ./rest-formatter.vsix
+          files: ./rest-formatter-*.vsix
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
