@@ -22,8 +22,10 @@ This extension contributes the following settings:
 
 -   `rest-formatter.header.indent`: Number of spaces to indent headers.
     -   **Default**: `0`
+    -   **Range**: `0`-`32`
 -   `rest-formatter.body.json.indent`: Number of spaces to indent the root of the JSON body.
     -   **Default**: `0`
+    -   **Range**: `0`-`10`
 
 You can configure these settings in your `settings.json` file or through the VS Code settings UI.
 
@@ -38,8 +40,8 @@ You can configure these settings in your `settings.json` file or through the VS 
 
 ## Known Issues
 
--   There are no known issues at this time. Please report any issues you find on the [GitHub repository](https://github.com/suzuki-shm/rest-formatter).
-
+-   Documents larger than 5 MiB are intentionally not formatted to protect the VS Code extension host.
+-   Invalid or duplicate-key JSON bodies are left unchanged and reported once per formatting operation.
 
 ---
 

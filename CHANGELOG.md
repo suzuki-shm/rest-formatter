@@ -4,6 +4,14 @@ All notable changes to the "rest-formatter" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.1.1]
+
+### Security
+- Replaced object-based JSON reserialization with token-preserving formatting so valid JSON keys and number representations are retained.
+- Added bounds and runtime validation for indentation settings.
+- Added document-size, cancellation, and aggregated-error handling to protect the extension host.
+- Updated CI and release dependencies, pinned GitHub Actions, and restricted workflow token permissions.
+
 ## [0.1.0]
 
 ### Changed

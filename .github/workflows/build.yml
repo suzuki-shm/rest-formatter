@@ -1,34 +1,90 @@
-
 name: Build
 
 on:
   push:
     tags:
-      - 'v*' # vから始まるタグ（例: v1.0.0）がプッシュされた時に実行
-  workflow_dispatch: {} # GitHubのUIから手動で実行できるようにする
+      - 'v*'
+  workflow_dispatch: {}
 
 jobs:
   build:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22.x'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify tag matches extension version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          expected_tag="v$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "${expected_tag}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match extension version ${expected_tag}."
+            exit 1
+          fi
+
+      - name: Run security audit
+        run: npm run security:audit
+
+      - name: Compile
+        run: npm run compile
+
+      - name: Package VSIX
+        run: npx --no-install @vscode/vsce package --out ./rest-formatter.vsix
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rest-formatter-vsix
+          path: ./rest-formatter.vsix
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
     permissions:
       contents: write
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.x'
+      - name: Use Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22.x'
 
-    - run: npm ci
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
 
-    - run: npm run compile
+      - name: Download VSIX artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: rest-formatter-vsix
 
-    - name: Package VSIX
-      run: npx @vscode/vsce package --out ./rest-formatter.vsix
+      - name: Publish to Visual Studio Marketplace
+        run: npx --no-install @vscode/vsce publish --packagePath ./rest-formatter.vsix --skip-duplicate
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: ./rest-formatter.vsix
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        with:
+          files: ./rest-formatter.vsix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
