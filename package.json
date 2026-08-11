@@ -85,7 +85,7 @@
     "@vscode/vsce": "^3.9.2",
     "eslint": "^9.39.5",
     "sinon": "^21.1.2",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "jsonc-parser": "^3.3.1"
