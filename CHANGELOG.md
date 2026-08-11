@@ -4,6 +4,15 @@ All notable changes to the "rest-formatter" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.1.2]
+
+### Fixed
+- Adopted TypeScript 7 while retaining the TypeScript 6 API compatibility required by the existing toolchain.
+
+### Changed
+- Updated development dependencies, including ESLint, Sinon, and Node.js type definitions.
+- Updated the GitHub Actions used for testing, packaging, and publishing releases.
+
 ## [0.1.1]
 
 ### Security
