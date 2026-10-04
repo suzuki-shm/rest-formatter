@@ -4,6 +4,11 @@ All notable changes to the "rest-formatter" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.2.0]
+
+### Changed
+- **JSON Content Type header:** Added `rest-formatter.header.contenttypes.json` setting to enable formatting of JSON bodies with Content Type header value other than `application/json`.
+
 ## [0.1.2]
 
 ### Fixed

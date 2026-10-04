@@ -189,10 +189,10 @@ suite('REST Formatter Test Suite', () => {
       '{"a":1}',
     ].join('\n');
     for (const settings of [
-      { headerIndent: -1, bodyIndent: -1 },
-      { headerIndent: 1.5, bodyIndent: 2.5 },
-      { headerIndent: 33, bodyIndent: 11 },
-      { headerIndent: 1_000_000_000, bodyIndent: 1_000_000_000 },
+      { headerIndent: -1, bodyIndent: -1, JSONContentTypes: ['application/json'] },
+      { headerIndent: 1.5, bodyIndent: 2.5, JSONContentTypes: ['application/json'] },
+      { headerIndent: 33, bodyIndent: 11, JSONContentTypes: ['application/json'] },
+      { headerIndent: 1_000_000_000, bodyIndent: 1_000_000_000, JSONContentTypes: ['application/json'] },
     ]) {
       assert.doesNotThrow(() => formatDocumentText(validDocument, settings));
     }
@@ -200,6 +200,7 @@ suite('REST Formatter Test Suite', () => {
     const result = formatDocumentText('x'.repeat(MAX_DOCUMENT_CHARS + 1), {
       headerIndent: 1_000_000_000,
       bodyIndent: -1,
+      JSONContentTypes: ['application/json'],
     });
     assert.strictEqual(result.tooLarge, true);
     assert.strictEqual(result.formattedText.length, MAX_DOCUMENT_CHARS + 1);
@@ -224,7 +225,7 @@ suite('REST Formatter Test Suite', () => {
       '',
       '{"c":3,}',
     ].join('\n');
-    const formatted = formatDocumentText(input, { headerIndent: 0, bodyIndent: 0 });
+    const formatted = formatDocumentText(input, { headerIndent: 0, bodyIndent: 0, JSONContentTypes: ['application/json'] });
 
     assert.strictEqual(formatted.invalidJsonCount, 2);
     assert.strictEqual(formatted.formattedText.includes('{"a":1,}'), true);
@@ -234,7 +235,7 @@ suite('REST Formatter Test Suite', () => {
     let cancellationChecks = 0;
     const canceled = formatDocumentText(
       input,
-      { headerIndent: 0, bodyIndent: 0 },
+      { headerIndent: 0, bodyIndent: 0, JSONContentTypes: ['application/json'] },
       () => ++cancellationChecks > 1,
     );
     assert.strictEqual(canceled.canceled, true);
@@ -273,6 +274,18 @@ suite('REST Formatter Test Suite', () => {
       assert.strictEqual(document.getText().includes('{"c":3,}'), true);
     } finally {
       showInformationMessage.restore();
+    }
+  });
+
+  test('17. Customized JSON Content Type', async () => {
+    const config = vscode.workspace.getConfiguration('rest-formatter');
+    await config.update('header.contenttypes.json', ['application/cloudevents+json'], vscode.ConfigurationTarget.Global);
+    const input = readFixture('json-content-types-override', 'input.http');
+    const expected = readFixture('json-content-types-override', 'expected.http');
+    try {
+      await runFormatTest(input, expected);
+    } finally {
+      await config.update('header.contenttypes.json', undefined, vscode.ConfigurationTarget.Global);
     }
   });
 });

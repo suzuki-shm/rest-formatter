@@ -1,0 +1,8 @@
+POST https://example.com/api/users
+Content-Type: application/cloudevents+json
+
+{
+  "name": "John Doe",
+  "age": 30,
+  "email": "john.doe@example.com"
+}

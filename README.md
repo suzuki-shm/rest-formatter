@@ -26,6 +26,8 @@ This extension contributes the following settings:
 -   `rest-formatter.body.json.indent`: Number of spaces to indent the root of the JSON body.
     -   **Default**: `0`
     -   **Range**: `0`-`10`
+-   `rest-formatter.header.contenttypes.json`: List of header Content Types to be regarded as JSON.
+    -   **Default**: `["application/json"]`
 
 You can configure these settings in your `settings.json` file or through the VS Code settings UI.
 
@@ -34,7 +36,8 @@ You can configure these settings in your `settings.json` file or through the VS 
 ```json
 {
     "rest-formatter.header.indent": 4,
-    "rest-formatter.body.json.indent": 2
+    "rest-formatter.body.json.indent": 2,
+    "rest-formatter.header.contenttypes.json": ["application/json", "application/cloudevents+json"]
 }
 ```
 

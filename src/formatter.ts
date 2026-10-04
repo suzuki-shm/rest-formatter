@@ -8,6 +8,7 @@ const MAX_BODY_INDENT = 10;
 export interface FormatterSettings {
     headerIndent: number;
     bodyIndent: number;
+    JSONContentTypes: string[];
 }
 
 export interface FormatJsonResult {
@@ -34,6 +35,7 @@ export function normalizeFormatterSettings(settings: FormatterSettings): Formatt
     return {
         headerIndent: sanitizeIndent(settings.headerIndent, MAX_HEADER_INDENT),
         bodyIndent: sanitizeIndent(settings.bodyIndent, MAX_BODY_INDENT),
+        JSONContentTypes: settings.JSONContentTypes,
     };
 }
 
@@ -112,8 +114,11 @@ function formatRequest(request: string, settings: FormatterSettings): FormatRequ
     let isJson = false;
     const formattedHeaders = headerLines.map(line => {
         const trimmedLine = line.trim();
-        if (trimmedLine.toLowerCase().startsWith('content-type: application/json')) {
-            isJson = true;
+        if (trimmedLine.toLowerCase().startsWith('content-type:')) {
+            const contentType = trimmedLine.toLowerCase().split(':')[1]?.trim();
+            if (settings.JSONContentTypes.includes(contentType)) {
+              isJson = true;
+            }
         }
         return ' '.repeat(settings.headerIndent) + trimmedLine;
     }).join('\n');

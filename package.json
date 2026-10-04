@@ -2,7 +2,7 @@
   "name": "rest-formatter",
   "displayName": "REST Formatter",
   "description": "REST Formatter for Visual Studio Code",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -51,14 +51,24 @@
           "default": 0,
           "minimum": 0,
           "maximum": 32,
-          "description": "Number of spaces to indent headers."
+          "description": "Number of spaces to indent headers.",
+          "scope": "resource"
         },
         "rest-formatter.body.json.indent": {
           "type": "integer",
           "default": 0,
           "minimum": 0,
           "maximum": 10,
-          "description": "Number of spaces to indent the root of the JSON body."
+          "description": "Number of spaces to indent the root of the JSON body.",
+          "scope": "resource"
+        },
+        "rest-formatter.header.contenttypes.json": {
+          "type": "array",
+          "default": [
+            "application/json"
+          ],
+          "description": "List of header Content Types to be regarded as JSON.",
+          "scope": "resource"
         }
       }
     }
